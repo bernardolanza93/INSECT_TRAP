@@ -2,6 +2,7 @@ import cv2
 import time
 import urllib.request as urllib2
 import sys
+import os
 """
 ________________INFO_____________
 Support for larger Lipo Battery of 5000 or 10,000 mAH+ to last up to 24 hrs +
@@ -11,6 +12,15 @@ Low profile design to fit inside lots of existing Raspberry Pi cases!
 
 """
 
+
+
+
+def temperature_of_raspberry_pi():
+    try:
+        cpu_temp = os.popen("vcgencmd measure_temp").readline()
+        return cpu_temp.replace("temp=", "")
+    except Exception as e:
+        print("ERR: ",e)
 
 
 def internet_on():
@@ -60,6 +70,10 @@ while True:
         print("sending image")
     else:
         print("no connection")
+
+
+
+    temperature_of_raspberry_pi()
     sys.exit()
 
     time.sleep(3600)
