@@ -17,3 +17,5 @@ sudo apt-get install libhdf5-dev libhdf5-serial-dev
 
 
 sudo apt-get install libopencv-dev python3-opencv
+
+#sudo poweroff #spegne ma non del tutto

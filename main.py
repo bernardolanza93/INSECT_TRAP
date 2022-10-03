@@ -1,8 +1,14 @@
+#!/usr/bin/python
 import cv2
 import time
 import urllib.request as urllib2
 import sys
 import os
+
+import subprocess
+from subprocess import call
+import RPi.GPIO as GPIO            # import RPi.GPIO module
+
 """
 ________________INFO_____________
 Support for larger Lipo Battery of 5000 or 10,000 mAH+ to last up to 24 hrs +
@@ -12,6 +18,17 @@ Low profile design to fit inside lots of existing Raspberry Pi cases!
 
 """
 
+
+AUTO_POWER_OFF = False
+PINOUT = 1
+
+def send_signal_2_arduino(PIN):
+    GPIO.setmode(GPIO.BCM)  # choose BCM or BOARD
+    GPIO.setup(PIN, GPIO.OUT)  # set a port/pin as an output
+    GPIO.output(PIN, 1)  # set port/pin value to 1/GPIO.HIGH/True
+
+    print("shutdown signal sended")
+    time.sleep(15)
 
 
 
@@ -74,6 +91,14 @@ while True:
 
 
     print(temperature_of_raspberry_pi())
-    sys.exit()
+    #sys.exit()
 
-    time.sleep(3600)
+    time.sleep(5)
+
+    send_signal_2_arduino(PINOUT) #da qui dovrebbe spegnersi
+
+    if AUTO_POWER_OFF:
+        #controlla quale funziona
+        subprocess.Popen(['shutdown', '-h', 'now'])
+        call("sudo shutdown -h now", shell=True)
+        #oppure switcha alla low power finche non viene spento da relay
