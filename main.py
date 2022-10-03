@@ -73,7 +73,7 @@ while True:
 
 
 
-    temperature_of_raspberry_pi()
+    print(temperature_of_raspberry_pi())
     sys.exit()
 
     time.sleep(3600)
