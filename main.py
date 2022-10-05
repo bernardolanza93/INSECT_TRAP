@@ -46,6 +46,24 @@ def internet_on():
         return True
     except urllib2.URLError as err:
         return False
+def blink_led(PIN,blink_time):
+    print("blinking", blink_time)
+
+def check_button_pressure():
+    GPIO.setwarnings(False)  # Ignore warning for now
+    GPIO.setmode(GPIO.BOARD)  # Use physical pin numbering
+    GPIO.setup(10, GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+    # Set pin 10 to be an input pin and set initial value to be pulled low (off)
+    start = time.time()
+    while time < 5:  # Run forever
+        stop = time.time()
+        time = stop-start
+        if GPIO.input(10) == GPIO.HIGH:
+            print("Button was pushed!")
+        else:
+            blink_led(2,0.2)
+
+
 
 
 def capture_frame():
@@ -102,3 +120,5 @@ while True:
         subprocess.Popen(['shutdown', '-h', 'now'])
         call("sudo shutdown -h now", shell=True)
         #oppure switcha alla low power finche non viene spento da relay
+
+
