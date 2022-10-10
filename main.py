@@ -65,6 +65,7 @@ def blink_led(button_state,blink_time,LED_PINOUT):
     start = time.time()
     time_elapsed = 0
     while time_elapsed < BLINK_TIME and button_state.value == 0:  # Run forever
+        print("time ele:", time_elapsed)
         GPIO.output(LED_PINOUT, GPIO.HIGH)  # Turn on
         time.sleep(0.5)  # Sleep for 1 second
         GPIO.output(LED_PINOUT, GPIO.LOW)  # Turn off
