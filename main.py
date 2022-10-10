@@ -73,6 +73,7 @@ def blink_led(button_state,blink_time,LED_PINOUT):
         GPIO.output(LED_PINOUT, GPIO.LOW)  # Turn off
         time.sleep(0.5)  # Sleep for 1 second
         i +=1
+    GPIO.output(LED_PINOUT, GPIO.LOW)  # Turn off
 
 
 def check_button_pressure(button_state,BLINK_TIME):
