@@ -66,13 +66,14 @@ def blink_led(button_state,blink_time,LED_PINOUT):
     GPIO.setup(LED_PINOUT, GPIO.OUT, initial=GPIO.LOW)  # Set pin 8 to be an output pin and set initial value to low (off)
     print("blinking", blink_time)
     start = time.time()
-    time_elapsed = 0
-    while time_elapsed < BLINK_TIME and button_state.value == 0:  # Run forever
-        print("time ele:", time_elapsed)
+    i = 0
+    while i < BLINK_TIME and button_state.value == 0:  # Run forever
+        print("time ele:", i)
         GPIO.output(LED_PINOUT, GPIO.HIGH)  # Turn on
         time.sleep(0.5)  # Sleep for 1 second
         GPIO.output(LED_PINOUT, GPIO.LOW)  # Turn off
         time.sleep(0.5)  # Sleep for 1 second
+        i +=1
 
 
 def check_button_pressure(button_state,BLINK_TIME):
@@ -81,12 +82,13 @@ def check_button_pressure(button_state,BLINK_TIME):
     GPIO.setup(BUTTON_PIN, GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
     # Set pin 10 to be an input pin and set initial value to be pulled low (off)
     start = time.time()
-    time_elapsed = 0
-    while time_elapsed < BLINK_TIME and button_state.value == 0:  # Run forever
+    i = 0
+    while i < BLINK_TIME and button_state.value == 0:  # Run forever
         time.sleep(0.1)
         stop = time.time()
         time_elapsed = stop-start
         buttonState = GPIO.input(BUTTON_PIN)
+        i +=1
         if buttonState == False:
             button_state.value = 1
             print("Button was pushed!")
