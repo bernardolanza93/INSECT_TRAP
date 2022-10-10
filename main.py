@@ -41,6 +41,7 @@ def send_signal_2_arduino(PIN_2_ARDUINO):
         print("shutdown signal sended tryiing")
         time.sleep(3)
         GPIO.output(PIN_2_ARDUINO, GPIO.LOW)  # set port/pin value to 1/GPIO.HIGH/True
+        time.sleep(0.5)
 
 
 
