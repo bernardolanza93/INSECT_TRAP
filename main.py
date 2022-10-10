@@ -130,8 +130,8 @@ while True:
     time.sleep(5)
     button_state = multiprocessing.Value("i", 0)
     try:
-        p1 = multiprocessing.Process(target=check_button_pressure(), args=(button_state,BLINK_TIME))
-        p2 = multiprocessing.Process(target=blink_led(), args=(button_state, BLINK_TIME, LED_PINOUT))
+        p1 = multiprocessing.Process(target=check_button_pressure, args=(button_state,BLINK_TIME))
+        p2 = multiprocessing.Process(target=blink_led, args=(button_state, BLINK_TIME, LED_PINOUT))
         p1.start()
         p2.start()
         p1.join()
