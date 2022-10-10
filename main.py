@@ -56,6 +56,8 @@ def internet_on():
     except urllib2.URLError as err:
         return False
 def blink_led(button_state,blink_time,LED_PINOUT):
+    GPIO.setwarnings(False)  # Ignore warning for now
+    GPIO.setmode(GPIO.BOARD)  # Use physical pin numbering
     print("blinking", blink_time)
     start = time.time()
     time_elapsed = 0
