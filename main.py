@@ -58,6 +58,7 @@ def internet_on():
 def blink_led(button_state,blink_time,LED_PINOUT):
     GPIO.setwarnings(False)  # Ignore warning for now
     GPIO.setmode(GPIO.BOARD)  # Use physical pin numbering
+    GPIO.setup(LED_PINOUT, GPIO.OUT, initial=GPIO.LOW)  # Set pin 8 to be an output pin and set initial value to low (off)
     print("blinking", blink_time)
     start = time.time()
     time_elapsed = 0
