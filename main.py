@@ -88,13 +88,14 @@ def check_button_pressure(button_state,BLINK_TIME):
         stop = time.time()
         time_elapsed = stop-start
         buttonState = GPIO.input(BUTTON_PIN)
-        i +=1
+
         if buttonState == False:
             button_state.value = 1
             print("Button was pushed!")
 
         else:
             pass
+        i += 1
 
 
 
