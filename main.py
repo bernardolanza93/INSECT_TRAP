@@ -31,6 +31,7 @@ PIN_2_ARDUINO = 5
 AUTO_TERMINATION = True
 
 def send_signal_2_arduino(PIN_2_ARDUINO):
+    GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)  # choose BCM or BOARD
     GPIO.setup(PIN_2_ARDUINO, GPIO.OUT)  # set a port/pin as an output
     GPIO.output(PIN_2_ARDUINO, 1)  # set port/pin value to 1/GPIO.HIGH/True
