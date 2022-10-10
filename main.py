@@ -24,8 +24,8 @@ Low profile design to fit inside lots of existing Raspberry Pi cases!
 
 
 AUTO_POWER_OFF = False
-BUTTON_PIN = 10
-LED_PINOUT = 1
+BUTTON_PIN = 5
+LED_PINOUT = 3
 BLINK_TIME = 10
 PIN_2_ARDUINO = 5
 AUTO_TERMINATION = True
