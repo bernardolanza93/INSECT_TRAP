@@ -9,6 +9,7 @@ sudo apt-get install git
 sudo apt-get install rpi.gpio
 cd
 #git clone https://github.com/bernardolanza93/INSECT_TRAP.git
+#
 cd
 cd INSECT_TRAP/
 git pull
