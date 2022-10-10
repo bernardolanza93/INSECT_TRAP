@@ -21,10 +21,12 @@ Pranav Cherukupalli <cherukupallip@gmail.com>
 
 #define uS_TO_S_FACTOR 1000000ULL  /* Conversion factor for micro seconds to seconds */
 #define TIME_TO_SLEEP  5       /* Time ESP32 will go to sleep (in seconds) */
-#define RELAY 25
-#define PIN_IN_RP 26
+#define RELAY 17
+#define PIN_IN_RP 16
 
 RTC_DATA_ATTR int bootCount = 0;
+
+int val = 0;
 
 /*
 Method to print the reason by which ESP32
@@ -52,7 +54,10 @@ void setup(){
 
   //Increment boot number and print it every reboot
   ++bootCount;
-  pinMode(PIN_IN_RP, INPUT);
+  pinMode(PIN_IN_RP, INPUT);  
+  pinMode(RELAY, OUTPUT);
+  digitalWrite(RELAY, HIGH); // raspi spenta
+  
 
 
   //Print the wakeup reason for ESP32
@@ -89,20 +94,30 @@ void setup(){
 }
 
 void loop(){
+  digitalWrite(RELAY, HIGH); //raspi spenta
+  
 
-  digitalWrite(RELAY, HIGH); // Sends high signal 
-  delay(5000); // Waits for 1 second
-  digitalWrite(RELAY, LOW); // Makes the signal low
+
+  digitalWrite(RELAY, LOW); // accendo raspi
   delay(1000); // Waits for 1 second
 
   
-  val = digitalRead(PIN_IN_RP); 
-  if (val == 1){
-    Serial.println("input recived from raspi, shut down raspi and hoing to sleep");
-    
-  }
-  else{
-    Serial.println("NO data incoming, wait")
+  //val = digitalRead(PIN_IN_RP); 
+  while (true){
+    delay(500);
+    val = digitalRead(PIN_IN_RP); 
+    if (val == 1) {
+      delay(1000);
+      Serial.println("input recived from raspi, shut down raspi and hoing to sleep");
+      digitalWrite(RELAY, HIGH); // spengo raspi 
+      delay(1000); // Waits for 1 second
+      break;
+      
+      
+    }
+    else {
+      Serial.println("NO data incoming, wait");
+    }
   }
   
 
