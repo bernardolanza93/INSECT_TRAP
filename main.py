@@ -138,8 +138,8 @@ while True:
         p2.join()
         print("p1 is alive? -> {}".format(p1.is_alive()))
         print("p2 is alive? -> {}".format(p2.is_alive()))
-    except:
-        print("RPI button and led processes not running")
+    except Exception as e:
+        print("ERR multi proc: ", e)
 
     if button_state.value == 1:
         if internet_on():
