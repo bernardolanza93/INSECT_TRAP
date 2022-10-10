@@ -7,6 +7,7 @@ pip install upgrade numpy
 sudo apt install libatlas-base-dev
 sudo apt-get install git
 sudo apt-get install rpi.gpio
+pip install multiprocess
 cd
 #git clone https://github.com/bernardolanza93/INSECT_TRAP.git
 #
