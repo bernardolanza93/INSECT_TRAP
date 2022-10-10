@@ -35,11 +35,13 @@ def send_signal_2_arduino(PIN_2_ARDUINO):
     GPIO.setmode(GPIO.BOARD)  # choose BCM or BOARD
     GPIO.setup(PIN_2_ARDUINO, GPIO.OUT, initial=GPIO.LOW)  # set a port/pin as an output
 
-    GPIO.output(PIN_2_ARDUINO, GPIO.HIGH)  # set port/pin value to 1/GPIO.HIGH/True
+    for i in range(3):
+        GPIO.output(PIN_2_ARDUINO, GPIO.HIGH)  # set port/pin value to 1/GPIO.HIGH/True
 
-    print("shutdown signal sended tryiing")
-    time.sleep(5)
-    GPIO.output(PIN_2_ARDUINO, GPIO.LOW)  # set port/pin value to 1/GPIO.HIGH/True
+        print("shutdown signal sended tryiing")
+        time.sleep(3)
+        GPIO.output(PIN_2_ARDUINO, GPIO.LOW)  # set port/pin value to 1/GPIO.HIGH/True
+
 
 
 
