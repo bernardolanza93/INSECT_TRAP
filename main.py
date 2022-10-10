@@ -155,6 +155,17 @@ while True:
             print("internet ok, sending")
         else:
             print("no internet connection")
+            GPIO.setwarnings(False)  # Ignore warning for now
+            GPIO.setmode(GPIO.BOARD)  # Use physical pin numbering
+            GPIO.setup(LED_PINOUT, GPIO.OUT,
+                       initial=GPIO.LOW)  # Set pin 8 to be an output pin and set initial value to low (off)
+
+            for k in range(10):
+                GPIO.output(LED_PINOUT, GPIO.HIGH)  # Turn on
+                time.sleep(0.1)  # Sleep for 1 second
+                GPIO.output(LED_PINOUT, GPIO.LOW)  # Turn off
+                time.sleep(0.1)  # Sleep for 1 second
+
     else:
         print("normal running capturing...")
 
