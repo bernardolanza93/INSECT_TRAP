@@ -30,6 +30,21 @@ BLINK_TIME = 10
 PIN_2_ARDUINO = 7
 AUTO_TERMINATION = True
 
+
+def generic_blink(blink_interval_seconds,blink_times,PIN_LED):
+    GPIO.setwarnings(False)  # Ignore warning for now
+    GPIO.setmode(GPIO.BOARD)  # Use physical pin numbering
+    GPIO.setup(PIN_LED, GPIO.OUT,initial=GPIO.LOW)  # Set pin 8 to be an output pin and set initial value to low (off)
+    for i in range(blink_times):
+        print("time ele:", i)
+        GPIO.output(PIN_LED, GPIO.HIGH)  # Turn on
+        time.sleep(blink_interval_seconds)  # Sleep for 1 second
+        GPIO.output(PIN_LED, GPIO.LOW)  # Turn off
+        time.sleep(blink_interval_seconds)  # Sleep for 1 second
+        i += 1
+    GPIO.output(PIN_LED, GPIO.LOW)  # Turn off
+
+
 def send_signal_2_arduino(PIN_2_ARDUINO):
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)  # choose BCM or BOARD
@@ -115,7 +130,7 @@ def capture_frame():
 
         # If keyboard interrupt occurs, destroy image
         # window
-        cv2.imshow("GeeksForGeeks", image)
+        cv2.imshow("img", image)
 
         cv2.waitKey(1000)
         cv2.destroyWindow("GeeksForGeeks")
@@ -153,29 +168,33 @@ while True:
     if button_state.value == 1:
         if internet_on():
             print("internet ok, sending")
+            generic_blink(1, 5, LED_PINOUT)
+            try:
+
+                send_signal_2_arduino(PIN_2_ARDUINO)  # da qui dovrebbe spegnersi
+                #forzo spegnimento se non arriva da arduino, anche arduino dopo un npo non aspettera piu segnali
+                subprocess.Popen(['shutdown', '-h', 'now'])
+                call("sudo shutdown -h now", shell=True)
+            except:
+                print("cannot send input to arduino for power off")
+
         else:
             print("no internet connection")
-            GPIO.setwarnings(False)  # Ignore warning for now
-            GPIO.setmode(GPIO.BOARD)  # Use physical pin numbering
-            GPIO.setup(LED_PINOUT, GPIO.OUT,
-                       initial=GPIO.LOW)  # Set pin 8 to be an output pin and set initial value to low (off)
+            generic_blink(0.1, 15, LED_PINOUT)
 
-            for k in range(10):
-                GPIO.output(LED_PINOUT, GPIO.HIGH)  # Turn on
-                time.sleep(0.1)  # Sleep for 1 second
-                GPIO.output(LED_PINOUT, GPIO.LOW)  # Turn off
-                time.sleep(0.1)  # Sleep for 1 second
+
 
     else:
         print("normal running capturing...")
 
     capture_frame()
-
     time.sleep(2)
 
 
     try:
         send_signal_2_arduino(PIN_2_ARDUINO) #da qui dovrebbe spegnersi
+        subprocess.Popen(['shutdown', '-h', 'now'])
+        call("sudo shutdown -h now", shell=True)
     except:
         print("cannot send input to arduino for power off")
 
@@ -183,10 +202,5 @@ while True:
         print("termino male")
         sys.exit()
 
-    if AUTO_POWER_OFF:
-        #controlla quale funziona
-        subprocess.Popen(['shutdown', '-h', 'now'])
-        call("sudo shutdown -h now", shell=True)
-        #oppure switcha alla low power finche non viene spento da relay
 
 
