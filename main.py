@@ -5,8 +5,10 @@ import urllib.request as urllib2
 import sys
 import os
 import multiprocessing
-
+import logging
 import subprocess
+import bot
+from datetime import datetime
 from subprocess import call
 try:
     import RPi.GPIO as GPIO            # import RPi.GPIO module
@@ -31,12 +33,44 @@ PIN_2_ARDUINO = 7
 AUTO_TERMINATION = True
 
 
+
+
+def check_folder(relative_path):
+    """
+    check_folder : check  the existence and if not, create the path for the results folder
+
+    :param relative_path:path to be checked
+
+
+    :return nothing:
+    """
+
+    workingDir = os.getcwd()
+    path = workingDir + relative_path
+
+    # Check whether the specified path exists or not
+    isExist = os.path.exists(path)
+
+    if not isExist:
+        # Create a new directory because it does not exist
+        os.makedirs(path)
+
+        print("The new directory is created!", path)
+    else:
+        print('directory ok:', path)
+
+
+
+
+
+
+
 def generic_blink(blink_interval_seconds,blink_times,PIN_LED):
     GPIO.setwarnings(False)  # Ignore warning for now
     GPIO.setmode(GPIO.BOARD)  # Use physical pin numbering
     GPIO.setup(PIN_LED, GPIO.OUT,initial=GPIO.LOW)  # Set pin 8 to be an output pin and set initial value to low (off)
     for i in range(blink_times):
-        print("time ele:", i)
+        #loggingR.info("time ele:", i)
         GPIO.output(PIN_LED, GPIO.HIGH)  # Turn on
         time.sleep(blink_interval_seconds)  # Sleep for 1 second
         GPIO.output(PIN_LED, GPIO.LOW)  # Turn off
@@ -53,7 +87,7 @@ def send_signal_2_arduino(PIN_2_ARDUINO):
     for i in range(3):
         GPIO.output(PIN_2_ARDUINO, GPIO.HIGH)  # set port/pin value to 1/GPIO.HIGH/True
 
-        print("shutdown signal sended tryiing")
+        loggingR.info("shutdown signal sended tryiing")
         time.sleep(3)
         GPIO.output(PIN_2_ARDUINO, GPIO.LOW)  # set port/pin value to 1/GPIO.HIGH/True
         time.sleep(0.5)
@@ -66,7 +100,7 @@ def temperature_of_raspberry_pi():
         cpu_temp = os.popen("vcgencmd measure_temp").readline()
         return cpu_temp.replace("temp=", "")
     except Exception as e:
-        print("ERR: ",e)
+        loggingR.info("ERR: ",e)
 
 
 def internet_on():
@@ -79,10 +113,10 @@ def blink_led(button_state,blink_time,LED_PINOUT):
     GPIO.setwarnings(False)  # Ignore warning for now
     GPIO.setmode(GPIO.BOARD)  # Use physical pin numbering
     GPIO.setup(LED_PINOUT, GPIO.OUT, initial=GPIO.LOW)  # Set pin 8 to be an output pin and set initial value to low (off)
-    print("blinking", blink_time)
+    loggingR.info("blinking", blink_time)
     i = 0
     while i < BLINK_TIME and button_state.value == 0:  # Run forever
-        print("time ele:", i)
+        loggingR.info("time ele:", i)
         GPIO.output(LED_PINOUT, GPIO.HIGH)  # Turn on
         time.sleep(0.5)  # Sleep for 1 second
         GPIO.output(LED_PINOUT, GPIO.LOW)  # Turn off
@@ -103,7 +137,7 @@ def check_button_pressure(button_state,BLINK_TIME):
 
         if buttonState == False:
             button_state.value = 1
-            print("Button was pushed!")
+            loggingR.info("Button was pushed!")
 
         else:
             pass
@@ -126,28 +160,41 @@ def capture_frame():
         # saving image in local storage
         stamp = time.strftime("%m-%d-%Y_%H:%M:%S")
 
-        cv2.imwrite("trap_" + stamp + ".jpg" , image)
+        cv2.imwrite("data/trap_" + stamp + ".jpg" , image)
 
         # If keyboard interrupt occurs, destroy image
         # window
         cv2.imshow("img", image)
 
         cv2.waitKey(1000)
-        cv2.destroyWindow("GeeksForGeeks")
+        cv2.destroyWindow("img")
 
     else:
-        print("No image detected. Please! try again")
+        loggingR.info("No image detected. Please! try again")
 
 
 
+
+check_folder("/data")
+try:
+    loggingR = logging.getLogger('RPI')
+    loggingR.setLevel(logging.INFO)
+    fh = logging.FileHandler('./data/RPI.log')
+    fh.setLevel(logging.DEBUG)
+    loggingR.addHandler(fh)
+except Exception as e:
+    print("ERROR LOGGING: ", e)
+    check_folder("/data")
+
+
+loggingR.info("____!!!!!!!_____starting BOOSE time____!!!!!!!_____: %s",datetime.now())
 while True:
 
 
-
     try:
-        print(temperature_of_raspberry_pi())
+        loggingR.info(temperature_of_raspberry_pi())
     except:
-        print("cannot read arduino temp")
+        loggingR.info("cannot read arduino temp")
     #sys.exit()
 
 
@@ -160,15 +207,21 @@ while True:
         p2.start()
         p1.join()
         p2.join()
-        print("p1 is alive? -> {}".format(p1.is_alive()))
-        print("p2 is alive? -> {}".format(p2.is_alive()))
+        loggingR.info("p1 is alive? -> {}".format(p1.is_alive()))
+        loggingR.info("p2 is alive? -> {}".format(p2.is_alive()))
     except Exception as e:
-        print("ERR multi proc: ", e)
+        loggingR.info("ERR multi proc: ", e)
 
     if button_state.value == 1:
         if internet_on():
-            print("internet ok, sending")
+            loggingR.info("internet ok, sending")
             generic_blink(1, 5, LED_PINOUT)
+            try:
+                os.system('python bot.py')
+
+            except Exception as e:
+                loggingR.info("ERR bot: ", e)
+
             try:
 
                 send_signal_2_arduino(PIN_2_ARDUINO)  # da qui dovrebbe spegnersi
@@ -176,16 +229,16 @@ while True:
                 subprocess.Popen(['shutdown', '-h', 'now'])
                 call("sudo shutdown -h now", shell=True)
             except:
-                print("cannot send input to arduino for power off")
+                loggingR.info("cannot send input to arduino for power off")
 
         else:
-            print("no internet connection")
+            loggingR.info("no internet connection")
             generic_blink(0.1, 15, LED_PINOUT)
 
 
 
     else:
-        print("normal running capturing...")
+        loggingR.info("normal running capturing...")
 
     capture_frame()
     time.sleep(2)
@@ -193,13 +246,15 @@ while True:
 
     try:
         send_signal_2_arduino(PIN_2_ARDUINO) #da qui dovrebbe spegnersi
+        time.sleep(5)
         subprocess.Popen(['shutdown', '-h', 'now'])
         call("sudo shutdown -h now", shell=True)
     except:
-        print("cannot send input to arduino for power off")
+        loggingR.info("cannot send input to arduino for power off")
+
 
     if AUTO_TERMINATION == True:
-        print("termino male")
+        loggingR.info("termino male")
         sys.exit()
 
 

@@ -17,6 +17,10 @@ git pull
 cd
 
 sudo apt-get install libhdf5-dev libhdf5-serial-dev
+sudo pip install telepot
+sudo pip install filetype
+
+#sudo apt-get install python-pip
 
 
 sudo apt-get install libopencv-dev python3-opencv
