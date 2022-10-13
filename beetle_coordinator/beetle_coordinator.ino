@@ -138,6 +138,10 @@ void loop(){
   long int t_end = millis()/1000;
   long int t_tot = t_end - t_start; //second passed
   long int total_time_to_wait = (24*60*60) - t_tot;
+  Serial.print("total execution time : ");
+  Serial.println(t_tot);
+
+  
   
   esp_deep_sleep_start();
   delay(500);

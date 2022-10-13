@@ -7,6 +7,7 @@ import os
 import multiprocessing
 import logging
 import subprocess
+from pypylon import pylon
 
 from datetime import datetime
 from subprocess import call
@@ -147,29 +148,57 @@ def check_button_pressure(button_state,BLINK_TIME):
 
 def capture_frame():
 
-    cam_port = 0
-    cam = cv2.VideoCapture(cam_port)
+    #cam_port = 2
+    #cam = cv2.VideoCapture(cam_port)
 
+    # conecting to the first available camera
+    camera = pylon.InstantCamera(pylon.TlFactory.GetInstance().CreateFirstDevice())
 
-    result, image = cam.read()
+    # Grabing Continusely (video) with minimal delay
+    camera.StartGrabbing(pylon.GrabStrategy_LatestImageOnly)
+    converter = pylon.ImageFormatConverter()
 
-    if result:
+    # converting to opencv bgr format
+    converter.OutputPixelFormat = pylon.PixelType_BGR8packed
+    converter.OutputBitAlignment = pylon.OutputBitAlignment_MsbAligned
+    print(camera.IsGrabbing())
+    if camera.IsGrabbing():
+        grabResult = camera.RetrieveResult(5000, pylon.TimeoutHandling_ThrowException)
 
-        # saving image in local storage
+        if grabResult.GrabSucceeded():
+            # Access the image data
+            image = converter.Convert(grabResult)
+            img = image.GetArray()
+            cv2.namedWindow('title', cv2.WINDOW_NORMAL)
+            cv2.imshow('title', img)
+
+            cv2.waitKey(2000)
+            stamp = time.strftime("%m-%d-%Y_%H:%M:%S")
+
+            cv2.imwrite("data/trap_" + stamp + ".jpg", img)
+
+            grabResult.Release()
+            camera.StopGrabbing()
+
+            cv2.destroyAllWindows()
+    else:
+        loggingR.info("No image detected. Please! try again")
+
+    # Releasing the resource
+
+'''
         stamp = time.strftime("%m-%d-%Y_%H:%M:%S")
+        filename = "data/trap_" + stamp + ".png"
+        img.Save(pylon.ImageFileFormat_Png, filename)
 
-        cv2.imwrite("data/trap_" + stamp + ".jpg" , image)
 
-        # If keyboard interrupt occurs, destroy image
-        # window
-        #cv2.imshow("img", image)
-
-        cv2.waitKey(1000)
-        #cv2.destroyWindow("img")
 
     else:
         loggingR.info("No image detected. Please! try again")
 
+
+    camera.Close()
+'''
 
 
 
