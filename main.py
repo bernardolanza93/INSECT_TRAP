@@ -237,6 +237,7 @@ while True:
 
 
     else:
+        print("normal mode")
         loggingR.info("normal running capturing...")
 
     capture_frame()
@@ -246,8 +247,8 @@ while True:
     try:
         send_signal_2_arduino(PIN_2_ARDUINO) #da qui dovrebbe spegnersi
         time.sleep(5)
-        subprocess.Popen(['shutdown', '-h', 'now'])
-        call("sudo shutdown -h now", shell=True)
+        #subprocess.Popen(['shutdown', '-h', 'now'])
+        #call("sudo shutdown -h now", shell=True)
     except:
         loggingR.info("cannot send input to arduino for power off")
 
