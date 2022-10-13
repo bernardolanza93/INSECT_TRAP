@@ -91,8 +91,7 @@ def send_signal_2_arduino(PIN_2_ARDUINO):
         time.sleep(3)
         GPIO.output(PIN_2_ARDUINO, GPIO.LOW)  # set port/pin value to 1/GPIO.HIGH/True
         time.sleep(0.5)
-
-
+    GPIO.output(PIN_2_ARDUINO, GPIO.LOW)  # set port/pin value to 1/GPIO.HIGH/True
 
 
 def temperature_of_raspberry_pi():
@@ -163,10 +162,10 @@ def capture_frame():
 
         # If keyboard interrupt occurs, destroy image
         # window
-        cv2.imshow("img", image)
+        #cv2.imshow("img", image)
 
         cv2.waitKey(1000)
-        cv2.destroyWindow("img")
+        #cv2.destroyWindow("img")
 
     else:
         loggingR.info("No image detected. Please! try again")

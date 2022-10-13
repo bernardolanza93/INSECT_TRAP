@@ -20,7 +20,7 @@ Pranav Cherukupalli <cherukupallip@gmail.com>
 */
 
 #define uS_TO_S_FACTOR 1000000ULL  /* Conversion factor for micro seconds to seconds */
-#define TIME_TO_SLEEP  10       /* Time ESP32 will go to sleep (in seconds) */
+#define TIME_TO_SLEEP  20      /* Time ESP32 will go to sleep (in seconds) */
 #define RELAY 17
 #define PIN_IN_RP 16
 
@@ -94,25 +94,32 @@ void setup(){
 }
 
 void loop(){
+  Serial.println("start loop");
+
   long int t_start = millis()/1000;
-  digitalWrite(RELAY, HIGH); //raspi spenta
+  digitalWrite(RELAY, LOW); //raspi spenta
+  Serial.println("ralay off");
+  
   
 
 
-  digitalWrite(RELAY, LOW); // accendo raspi
+  digitalWrite(RELAY, HIGH); // accendo raspi
+  Serial.println("ralay on");
   delay(1000); // Waits for 1 second
 
   
   //val = digitalRead(PIN_IN_RP); 
   int i = 0;
-  while (i < 10){
+  while (i < 25){
     delay(500);
-    val = digitalRead(PIN_IN_RP); 
+    val = digitalRead(PIN_IN_RP);   
+    Serial.print("rval of input pin:");
+    Serial.println(val);
     i++;
     if (val == 1) {
       delay(500);
       Serial.println("input recived from raspi, shut down raspi and going to sleep");
-      digitalWrite(RELAY, HIGH); // spengo raspi 
+      digitalWrite(RELAY, LOW); // spengo raspi 
       delay(1000); // Waits for 1 second
       break;
       
@@ -120,15 +127,16 @@ void loop(){
     }
     else {
       Serial.println("NO data incoming, wait");
+      delay(1000);
     }
   }
   //spengo comunque la raspi se sono passati piu di 10 cicli da 2.5 s
-  digitalWrite(RELAY, HIGH); // spengo raspi 
+  digitalWrite(RELAY, LOW); // spengo raspi 
   
 
   delay(500);
   long int t_end = millis()/1000;
-  long int t_tot = t_end - t_start //second passed
+  long int t_tot = t_end - t_start; //second passed
   long int total_time_to_wait = (24*60*60) - t_tot;
   
   esp_deep_sleep_start();
