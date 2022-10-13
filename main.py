@@ -7,7 +7,7 @@ import os
 import multiprocessing
 import logging
 import subprocess
-import bot
+
 from datetime import datetime
 from subprocess import call
 try:
