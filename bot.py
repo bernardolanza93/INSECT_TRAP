@@ -14,6 +14,7 @@ def handleMessage(msg):
     id = msg['chat']['id'];
     command = msg['text'];
     print('Command ' + command + ' from chat id' + str(id));
+    bot.sendMessage(id, "get data with this bot using /get_data , or terminate the appplication with /power_off")
     if (command == '/get_data'):
 
         # Initialize the camera
