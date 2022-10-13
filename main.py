@@ -113,10 +113,9 @@ def blink_led(button_state,blink_time,LED_PINOUT):
     GPIO.setwarnings(False)  # Ignore warning for now
     GPIO.setmode(GPIO.BOARD)  # Use physical pin numbering
     GPIO.setup(LED_PINOUT, GPIO.OUT, initial=GPIO.LOW)  # Set pin 8 to be an output pin and set initial value to low (off)
-    loggingR.info("blinking", blink_time)
+    loggingR.info("blinking %s", blink_time)
     i = 0
     while i < BLINK_TIME and button_state.value == 0:  # Run forever
-        loggingR.info("time ele:", i)
         GPIO.output(LED_PINOUT, GPIO.HIGH)  # Turn on
         time.sleep(0.5)  # Sleep for 1 second
         GPIO.output(LED_PINOUT, GPIO.LOW)  # Turn off
