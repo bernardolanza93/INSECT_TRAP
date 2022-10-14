@@ -88,7 +88,7 @@ def send_signal_2_arduino(PIN_2_ARDUINO):
     for i in range(3):
         GPIO.output(PIN_2_ARDUINO, GPIO.HIGH)  # set port/pin value to 1/GPIO.HIGH/True
 
-        loggingR.info("shutdown signal sended tryiing")
+        loggingR.info("shutdown signal sended try... %s",str(i))
         time.sleep(3)
         GPIO.output(PIN_2_ARDUINO, GPIO.LOW)  # set port/pin value to 1/GPIO.HIGH/True
         time.sleep(0.5)
@@ -113,7 +113,7 @@ def blink_led(button_state,blink_time,LED_PINOUT):
     GPIO.setwarnings(False)  # Ignore warning for now
     GPIO.setmode(GPIO.BOARD)  # Use physical pin numbering
     GPIO.setup(LED_PINOUT, GPIO.OUT, initial=GPIO.LOW)  # Set pin 8 to be an output pin and set initial value to low (off)
-    loggingR.info("blinking %s", blink_time)
+    loggingR.info("blinking istants: %s", str(blink_time))
     i = 0
     while i < BLINK_TIME and button_state.value == 0:  # Run forever
         GPIO.output(LED_PINOUT, GPIO.HIGH)  # Turn on
@@ -141,6 +141,7 @@ def check_button_pressure(button_state,BLINK_TIME):
         else:
             pass
         i += 1
+
 
 
 
@@ -211,10 +212,11 @@ try:
     loggingR.addHandler(fh)
 except Exception as e:
     print("ERROR LOGGING: ", e)
-    check_folder("/data")
+
 
 
 loggingR.info("____!!!!!!!_____starting BOOSE time____!!!!!!!_____: %s",datetime.now())
+
 while True:
 
 
@@ -225,26 +227,29 @@ while True:
     #sys.exit()
 
 
-    time.sleep(5)
+    time.sleep(1)
     button_state = multiprocessing.Value("i", 0)
     try:
+        loggingR.info("processing button and blinking start")
         p1 = multiprocessing.Process(target=check_button_pressure, args=(button_state,BLINK_TIME))
         p2 = multiprocessing.Process(target=blink_led, args=(button_state, BLINK_TIME, LED_PINOUT))
         p1.start()
         p2.start()
         p1.join()
         p2.join()
-        loggingR.info("p1 is alive? -> {}".format(p1.is_alive()))
-        loggingR.info("p2 is alive? -> {}".format(p2.is_alive()))
+        loggingR.info("button process is alive? -> {}".format(p1.is_alive()))
+        loggingR.info("blink process is alive? -> {}".format(p2.is_alive()))
     except Exception as e:
         loggingR.info("ERR multi proc: ", e)
 
     if button_state.value == 1:
         if internet_on():
-            loggingR.info("internet ok, sending")
+            loggingR.info("internet ok, reaching telegram...")
             generic_blink(1, 5, LED_PINOUT)
             try:
+
                 os.system('python bot.py')
+                loggingR.info("bot started succefully")
 
             except Exception as e:
                 loggingR.info("ERR bot: ", e)
@@ -265,16 +270,20 @@ while True:
 
 
     else:
-        print("normal mode")
+        print("normal mode_only CAPTURE")
         loggingR.info("normal running capturing...")
+    try:
+        capture_frame()
+    except Exception as e:
+        loggingR.info("capture cmera error %s",str(e))
 
-    capture_frame()
-    time.sleep(2)
+
+    time.sleep(1)
 
 
     try:
         send_signal_2_arduino(PIN_2_ARDUINO) #da qui dovrebbe spegnersi
-        time.sleep(5)
+        time.sleep(2)
         #subprocess.Popen(['shutdown', '-h', 'now'])
         #call("sudo shutdown -h now", shell=True)
     except:
