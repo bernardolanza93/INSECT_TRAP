@@ -174,7 +174,7 @@ def capture_frame():
             cv2.namedWindow('title', cv2.WINDOW_NORMAL)
             #cv2.imshow('title', img)
 
-            cv2.waitKey(2000)
+
             stamp = time.strftime("%m-%d-%Y_%H:%M:%S")
 
             cv2.imwrite("data/trap_" + stamp + ".jpg", img)
