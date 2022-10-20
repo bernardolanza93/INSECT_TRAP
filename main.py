@@ -128,7 +128,8 @@ def blink_led(button_state,blink_time,LED_PINOUT):
 def check_button_pressure(button_state,BLINK_TIME):
     GPIO.setwarnings(False)  # Ignore warning for now
     GPIO.setmode(GPIO.BOARD)  # Use physical pin numbering
-    GPIO.setup(BUTTON_PIN, GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(BUTTON_PIN, GPIO.IN,pull_up_down=GPIO.PUD_UP)
+
     # Set pin 10 to be an input pin and set initial value to be pulled low (off)
     i = 0
     while i < BLINK_TIME and button_state.value == 0:  # Run forever
