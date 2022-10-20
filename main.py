@@ -171,7 +171,7 @@ def capture_frame():
             # Access the image data
             image = converter.Convert(grabResult)
             img = image.GetArray()
-            cv2.namedWindow('title', cv2.WINDOW_NORMAL)
+            #cv2.namedWindow('title', cv2.WINDOW_NORMAL)
             #cv2.imshow('title', img)
 
 
@@ -182,7 +182,7 @@ def capture_frame():
             grabResult.Release()
             camera.StopGrabbing()
 
-            cv2.destroyAllWindows()
+            #cv2.destroyAllWindows()
     else:
         loggingR.info("No image detected. Please! try again")
 
