@@ -23,7 +23,7 @@ def handleMessage(msg):
         for filename in os.listdir(path):
             #print(filename,os.listdir(path))
             if filename.endswith('.jpg'): #filetype >= 1.0.7
-                bot.sendPhoto(id, open(path + filename, 'rb'))
+                bot.sendDocument(id, open(path + filename, 'rb'))
             elif filename.endswith('.log'):
                 bot.sendDocument(id,open(path + filename, 'rb'))
             else:
