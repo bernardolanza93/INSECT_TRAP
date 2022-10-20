@@ -132,12 +132,13 @@ def check_button_pressure(button_state,BLINK_TIME):
     # Set pin 10 to be an input pin and set initial value to be pulled low (off)
     i = 0
     while i < BLINK_TIME and button_state.value == 0:  # Run forever
-        time.sleep(0.1)
+        time.sleep(0.01)
         buttonState = GPIO.input(BUTTON_PIN)
 
         if buttonState == False:
             button_state.value = 1
             loggingR.info("Button was pushed!")
+            print("pushed!")
 
         else:
             pass
