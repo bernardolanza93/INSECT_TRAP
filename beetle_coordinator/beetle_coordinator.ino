@@ -20,7 +20,7 @@ Pranav Cherukupalli <cherukupallip@gmail.com>
 */
 
 #define uS_TO_S_FACTOR 1000000ULL  /* Conversion factor for micro seconds to seconds */
-#define TIME_TO_SLEEP  20      /* Time ESP32 will go to sleep (in seconds) */
+#define TIME_TO_SLEEP  60      /* Time ESP32 will go to sleep (in seconds) */
 #define RELAY 17
 #define PIN_IN_RP 16
 
@@ -94,7 +94,7 @@ void setup(){
 }
 
 void loop(){
-  Serial.println("start loop");
+  //Serial.println("start loop");
 
   long int t_start = millis()/1000;
   digitalWrite(RELAY, LOW); //raspi spenta
@@ -110,7 +110,7 @@ void loop(){
   
   //val = digitalRead(PIN_IN_RP); 
   int i = 0;
-  while (i < 25){
+  while (i < 60){
     delay(500);
     val = digitalRead(PIN_IN_RP);   
     Serial.print("rval of input pin:");

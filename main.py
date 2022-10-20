@@ -32,6 +32,7 @@ LED_PINOUT = 3
 BLINK_TIME = 10
 PIN_2_ARDUINO = 7
 AUTO_TERMINATION = True
+DEBUG=False
 
 
 
@@ -171,7 +172,7 @@ def capture_frame():
             image = converter.Convert(grabResult)
             img = image.GetArray()
             cv2.namedWindow('title', cv2.WINDOW_NORMAL)
-            cv2.imshow('title', img)
+            #cv2.imshow('title', img)
 
             cv2.waitKey(2000)
             stamp = time.strftime("%m-%d-%Y_%H:%M:%S")
