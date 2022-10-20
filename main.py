@@ -90,7 +90,7 @@ def send_signal_2_arduino(PIN_2_ARDUINO):
         GPIO.output(PIN_2_ARDUINO, GPIO.HIGH)  # set port/pin value to 1/GPIO.HIGH/True
 
         loggingR.info("shutdown signal sended try... %s",str(i))
-        time.sleep(3)
+        time.sleep(1)
         GPIO.output(PIN_2_ARDUINO, GPIO.LOW)  # set port/pin value to 1/GPIO.HIGH/True
         time.sleep(0.5)
     GPIO.output(PIN_2_ARDUINO, GPIO.LOW)  # set port/pin value to 1/GPIO.HIGH/True
@@ -285,7 +285,7 @@ while True:
 
     try:
         send_signal_2_arduino(PIN_2_ARDUINO) #da qui dovrebbe spegnersi
-        time.sleep(2)
+        time.sleep(1)
         #subprocess.Popen(['shutdown', '-h', 'now'])
         #call("sudo shutdown -h now", shell=True)
     except:
