@@ -277,6 +277,7 @@ while True:
         capture_frame()
     except Exception as e:
         loggingR.info("capture cmera error %s",str(e))
+        print(e)
 
 
     time.sleep(1)
